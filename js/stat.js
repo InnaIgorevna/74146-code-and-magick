@@ -2,10 +2,10 @@
 
 function getMaxResult(arr) {
   var max = arr[0];
-  for(var i = 1; i < arr.length; i++) {
-    if(max < arr[i]){
+  for (var i = 1; i < arr.length; i++) {
+    if (max < arr[i]) {
       max = arr[i];
-    }  
+    }
   }
   return max;
 }
@@ -13,7 +13,7 @@ function getMaxResult(arr) {
 function getColumnColor(name) {
   var transparency = Math.random();
   var columnColor;
-  if(name == 'Вы') {
+  if (name === 'Вы') {
     columnColor = 'rgba(255, 0, 0, 1)';
   } else {
     columnColor = 'rgba(0, 0, 255,' + transparency + ')';
@@ -26,19 +26,19 @@ function drawHistogram(ctx, names, times, drawStartX, drawStartY) {
   var maxColumnHeight = 150;
   var columnWidth = 40;
   var columnOffset = 50;
-  for(var i = 0; i < names.length; i++){
-    var rectHeight = maxColumnHeight * (times[i]/ maxTime);
+  for (var i = 0; i < names.length; i++) {
+    var rectHeight = maxColumnHeight * (times[i] / maxTime);
     var columnStartX = drawStartX + (i * (columnWidth + columnOffset));
     var columnStartY = maxColumnHeight + drawStartY - rectHeight;
     ctx.fillStyle = getColumnColor(names[i]);
     ctx.fillRect(columnStartX, columnStartY, columnWidth, rectHeight);
-    ctx.fillStyle  = 'black';
+    ctx.fillStyle = 'black';
     ctx.fillText(names[i], columnStartX, maxColumnHeight + drawStartY + 20);
     ctx.fillText(times[i].toFixed(0), columnStartX, columnStartY - 5);
   }
 }
 
-window.renderStatistics = function(ctx, names, times) {
+window.renderStatistics = function (ctx, names, times) {
   var statisticsWindowX = 100;
   var statisticsWindowY = 10;
   var statisticsWindowWidth = 420;
@@ -47,12 +47,12 @@ window.renderStatistics = function(ctx, names, times) {
   var drawStartX = statisticsWindowX + 30;
   var drawStartY = 100;
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(statisticsWindowX+10, statisticsWindowY+10, statisticsWindowWidth, statisticsWindowHeight);
+  ctx.fillRect(statisticsWindowX + 10, statisticsWindowY + 10, statisticsWindowWidth, statisticsWindowHeight);
   ctx.fillStyle = 'white';
-  ctx.fillRect(statisticsWindowX , statisticsWindowY, statisticsWindowWidth, statisticsWindowHeight);
+  ctx.fillRect(statisticsWindowX, statisticsWindowY, statisticsWindowWidth, statisticsWindowHeight);
   ctx.font = statisticsWindowFont;
-  ctx.fillStyle  = 'black';
+  ctx.fillStyle = 'black';
   ctx.fillText('Ура, вы победили!', drawStartX, 50);
   ctx.fillText('Список результатов:', drawStartX, 70);
   drawHistogram(ctx, names, times, drawStartX, drawStartY);
-}
+};
