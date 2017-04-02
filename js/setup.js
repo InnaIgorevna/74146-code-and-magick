@@ -42,7 +42,7 @@ var EYES_COLORS = [
 var WIZARD_COUNT = 4;
 // Возвращает рандомное целое число oт min до max
 function getRandom(min, max) {
-  return Math.floor( min + Math.random() * (max - min));
+  return Math.floor(min + Math.random() * (max - min));
 }
 // Возвращает рандомный элемет массива
 function getRandomArrayElement(arr) {
