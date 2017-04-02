@@ -38,11 +38,11 @@ var EYES_COLORS = [
   'yellow',
   'green'
 ];
+
+var WIZARD_COUNT = 4;
 // Возвращает рандомное целое число oт min до max
 function getRandom(min, max) {
-  var rand = min - 0.5 + Math.random() * (max - min + 1);
-  rand = Math.round(rand);
-  return rand;
+  return Math.floor( min + Math.random() * (max - min));
 }
 // Возвращает рандомный элемет массива
 function getRandomArrayElement(arr) {
@@ -50,10 +50,9 @@ function getRandomArrayElement(arr) {
 }
 // Возвращает полное имя волшебника
 function getWizardName() {
-  var rand = getRandom(0, 1);
   var name = getRandomArrayElement(NAMES);
   var surname = getRandomArrayElement(SURNAMES);
-  if (rand === 0) {
+  if (getRandom(0, 1) === 0) {
     return name + ' ' + surname;
   } else {
     return surname + ' ' + name;
@@ -70,7 +69,7 @@ function getWizardEyesColor() {
 // Возвращаем массив объектов волщебников
 function createWizards() {
   var wizards = [];
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < WIZARD_COUNT; i++) {
     wizards.push({
       name: getWizardName(),
       coatColor: getWizardCoatColor(),
