@@ -46,13 +46,13 @@ function getRandom(min, max) {
 }
 // Возвращает рандомный элемет массива
 function getRandomArrayElement(arr) {
-  return arr[getRandom(0, arr.length - 1)];
+  return arr[getRandom(0, arr.length)];
 }
 // Возвращает полное имя волшебника
 function getWizardName() {
   var name = getRandomArrayElement(NAMES);
   var surname = getRandomArrayElement(SURNAMES);
-  if (getRandom(0, 1) === 0) {
+  if (getRandom(0, 2) === 0) {
     return name + ' ' + surname;
   } else {
     return surname + ' ' + name;
