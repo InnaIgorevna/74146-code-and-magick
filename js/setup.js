@@ -148,15 +148,15 @@ setupOpenIcon.addEventListener('keydown', function (evt) {
 });
 // Изменение цвета мантии персонажа, по клику
 wizardCoat.addEventListener('click', function () {
-  this.style.fill = getRandomArrayElement(COAT_COLORS);
+  wizardCoat.style.fill = getRandomArrayElement(COAT_COLORS);
 });
 // Изменение цвета глаз персонажа, по клику
 wizardEyes.addEventListener('click', function () {
-  this.style.fill = getRandomArrayElement(EYES_COLORS);
+  wizardEyes.style.fill = getRandomArrayElement(EYES_COLORS);
 });
 // Изменение цвета огненого шара, по клику
 setupFireballWrap.addEventListener('click', function () {
-  this.style.background = getRandomArrayElement(FIREBALL_COLORS);
+  setupFireballWrap.style.background = getRandomArrayElement(FIREBALL_COLORS);
 });
 
 showWizard();
