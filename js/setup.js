@@ -124,14 +124,16 @@ var wizardCoat = document.querySelector('.wizard-coat');
 var wizardEyes = document.querySelector('.wizard-eyes');
 var setupOpenIcon = document.querySelector('.setup-open-icon');
 var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
+
 var ESC_KEY_CODE = 27;
 var ENTER_KEY_CODE = 13;
 // Открывает формы
 function openSetup() {
   showSetup();
-  // закрываем окно с героем спомощью Esc
+  // закрываем окно с героем спомощью Esc, а при фокусе в поле ввода имени, форма не закрывается
   document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEY_CODE) {
+    var userName = document.querySelector('.setup-user-name');
+    if (evt.keyCode === ESC_KEY_CODE && userName !== document.activeElement) {
       hideSetup();
     }
   });
@@ -140,6 +142,12 @@ function openSetup() {
 setupOpen.addEventListener('click', openSetup);
 // Клик на крестик формы закрывает её
 setupClose.addEventListener('click', hideSetup);
+// Выделение крестика формы и нажатие на enter, закрывает форму
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEY_CODE) {
+    hideSetup();
+  }
+});
 // открываем окно с героем с помощью Enter
 setupOpenIcon.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEY_CODE) {
