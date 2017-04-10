@@ -1,5 +1,4 @@
 'use strict';
-
 var NAMES = [
   'Иван',
   'Хуан Себастьян',
@@ -38,6 +37,15 @@ var EYES_COLORS = [
   'yellow',
   'green'
 ];
+
+var FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+
 
 var WIZARD_COUNT = 4;
 // Возвращает рандомное целое число oт min до max
@@ -98,15 +106,66 @@ function showWizard() {
   }
   similarListElement.appendChild(fragment);
 }
-// Показываем блок setup
-function showSetup() {
-  document.querySelector('.setup').classList.remove('hidden');
-}
 // Показываем блок setup-similar
 function showSimilarList() {
   document.querySelector('.setup-similar').classList.remove('hidden');
 }
+// Закрываем блок setup
+function hideSetup() {
+  document.querySelector('.setup').classList.add('hidden');
+}
+// Показываем блок setup
+function showSetup() {
+  document.querySelector('.setup').classList.remove('hidden');
+}
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+var wizardCoat = document.querySelector('.wizard-coat');
+var wizardEyes = document.querySelector('.wizard-eyes');
+var setupOpenIcon = document.querySelector('.setup-open-icon');
+var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
 
-showSetup();
+var ESC_KEY_CODE = 27;
+var ENTER_KEY_CODE = 13;
+// Открывает формы
+function openSetup() {
+  showSetup();
+  // закрываем окно с героем спомощью Esc, а при фокусе в поле ввода имени, форма не закрывается
+  document.addEventListener('keydown', function (evt) {
+    var userName = document.querySelector('.setup-user-name');
+    if (evt.keyCode === ESC_KEY_CODE && userName !== document.activeElement) {
+      hideSetup();
+    }
+  });
+}
+// Клик на блок с иконкой пользователя открывает форму
+setupOpen.addEventListener('click', openSetup);
+// Клик на крестик формы закрывает её
+setupClose.addEventListener('click', hideSetup);
+// Выделение крестика формы и нажатие на enter, закрывает форму
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEY_CODE) {
+    hideSetup();
+  }
+});
+// открываем окно с героем с помощью Enter
+setupOpenIcon.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEY_CODE) {
+    openSetup();
+  }
+});
+// Изменение цвета мантии персонажа, по клику
+wizardCoat.addEventListener('click', function () {
+  wizardCoat.style.fill = getRandomArrayElement(COAT_COLORS);
+});
+// Изменение цвета глаз персонажа, по клику
+wizardEyes.addEventListener('click', function () {
+  wizardEyes.style.fill = getRandomArrayElement(EYES_COLORS);
+});
+// Изменение цвета огненого шара, по клику
+setupFireballWrap.addEventListener('click', function () {
+  setupFireballWrap.style.background = getRandomArrayElement(FIREBALL_COLORS);
+});
+
 showWizard();
 showSimilarList();
