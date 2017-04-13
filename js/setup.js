@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+window.wizardData = (function () {
   var NAMES = [
     'Иван',
     'Хуан Себастьян',
@@ -22,7 +22,7 @@
     'Ирвинг'
   ];
 
-  window.COAT_COLORS = [
+  var COAT_COLORS = [
     'rgb(101, 137, 164)',
     'rgb(241, 43, 107)',
     'rgb(146, 100, 161)',
@@ -31,7 +31,7 @@
     'rgb(0, 0, 0)'
   ];
 
-  window.EYES_COLORS = [
+  var EYES_COLORS = [
     'black',
     'red',
     'blue',
@@ -45,13 +45,13 @@
     return Math.floor(min + Math.random() * (max - min));
   }
 // Возвращает рандомный элемет массива
-  window.getRandomArrayElement = function (arr) {
+  var getRandomArrayElement = function (arr) {
     return arr[getRandom(0, arr.length)];
   };
   // Возвращает полное имя волшебника
   function getWizardName() {
-    var name = window.getRandomArrayElement(NAMES);
-    var surname = window.getRandomArrayElement(SURNAMES);
+    var name = getRandomArrayElement(NAMES);
+    var surname = getRandomArrayElement(SURNAMES);
     if (getRandom(0, 2) === 0) {
       return name + ' ' + surname;
     } else {
@@ -60,11 +60,11 @@
   }
 // Возвращает цвет плаща
   function getWizardCoatColor() {
-    return window.getRandomArrayElement(window.COAT_COLORS);
+    return getRandomArrayElement(COAT_COLORS);
   }
 // Возвращает цвет глаз
   function getWizardEyesColor() {
-    return window.getRandomArrayElement(window.EYES_COLORS);
+    return getRandomArrayElement(EYES_COLORS);
   }
 // Возвращаем массив объектов волщебников
   function createWizards() {
@@ -96,6 +96,11 @@
     fragment.appendChild(renderWizard(wizards[i]));
   }
   similarListElement.appendChild(fragment);
+  return {
+    coatColors: COAT_COLORS,
+    eyesColors: EYES_COLORS,
+    getRandomArrayElement: getRandomArrayElement
+  };
 })();
 
 (function () {
@@ -152,15 +157,15 @@
   });
 // Изменение цвета мантии персонажа, по клику
   wizardCoat.addEventListener('click', function () {
-    wizardCoat.style.fill = window.getRandomArrayElement(window.COAT_COLORS);
+    wizardCoat.style.fill = window.wizardData.getRandomArrayElement(window.wizardData.coatColors);
   });
 // Изменение цвета глаз персонажа, по клику
   wizardEyes.addEventListener('click', function () {
-    wizardEyes.style.fill = window.getRandomArrayElement(window.EYES_COLORS);
+    wizardEyes.style.fill = window.wizardData.getRandomArrayElement(window.wizardData.eyesColors);
   });
 // Изменение цвета огненого шара, по клику
   setupFireballWrap.addEventListener('click', function () {
-    setupFireballWrap.style.background = window.getRandomArrayElement(FIREBALL_COLORS);
+    setupFireballWrap.style.background = window.wizardData.getRandomArrayElement(FIREBALL_COLORS);
   });
   // Показываем блок setup-similar
   document.querySelector('.setup-similar').classList.remove('hidden');

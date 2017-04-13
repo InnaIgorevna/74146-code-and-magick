@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+window.renderStatistics = (function () {
   function getMaxResult(arr) {
     var max = arr[0];
     for (var i = 1; i < arr.length; i++) {
@@ -38,7 +38,7 @@
     }
   }
 
-  window.renderStatistics = function (ctx, names, times) {
+  return function (ctx, names, times) {
     var statisticsWindowX = 100;
     var statisticsWindowY = 10;
     var statisticsWindowWidth = 420;
