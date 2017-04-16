@@ -1,8 +1,19 @@
 'use strict';
-window.getRandomArrayElement = (function () {
+window.utils = (function () {
   // Возвращает рандомный элемет массива
-  return function (arr) {
+  function getRandomArrayElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
+  }
+  var fillElement = function (element, color) {
+    element.style.fill = color;
+  };
+  var changeElementBackground = function (element, color) {
+    element.style.backgroundColor = color;
+  };
+  return {
+    getRandomArrayElement: getRandomArrayElement,
+    fillElement: fillElement,
+    changeElementBackground: changeElementBackground
   };
 })();
 
@@ -50,30 +61,20 @@ window.wizardData = (function () {
 
   // Возвращает полное имя волшебника
   function getWizardName() {
-    var name = window.getRandomArrayElement(NAMES);
-    var surname = window.getRandomArrayElement(SURNAMES);
+    var name = window.utils.getRandomArrayElement(NAMES);
+    var surname = window.utils.getRandomArrayElement(SURNAMES);
     if (Math.random() < 0.5) {
       return name + ' ' + surname;
     } else {
       return surname + ' ' + name;
     }
   }
-// Возвращает цвет плаща
-  function getWizardCoatColor() {
-    return window.getRandomArrayElement(COAT_COLORS);
-  }
-// Возвращает цвет глаз
-  function getWizardEyesColor() {
-    return window.getRandomArrayElement(EYES_COLORS);
-  }
 // Возвращаем массив объектов волщебников
   function createWizards() {
     var wizards = [];
     for (var i = 0; i < WIZARD_COUNT; i++) {
       wizards.push({
-        name: getWizardName(),
-        coatColor: getWizardCoatColor(),
-        eyesColor: getWizardEyesColor()
+        name: getWizardName()
       });
     }
     return wizards;
@@ -83,8 +84,8 @@ window.wizardData = (function () {
     var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
     var wizardElement = similarWizardTemplate.cloneNode(true);
     wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+    window.colorizeElement(wizardElement.querySelector('.wizard-coat'), COAT_COLORS, window.utils.fillElement);
+    window.colorizeElement(wizardElement.querySelector('.wizard-eyes'), EYES_COLORS, window.utils.fillElement);
     return wizardElement;
   }
 // fragment-oтстойник(Буфер). После того как собрался блок с волшебником. Этот блок отправляется в отстойник.
@@ -97,8 +98,8 @@ window.wizardData = (function () {
   }
   similarListElement.appendChild(fragment);
   return {
-    getWizardCoatColor: getWizardCoatColor,
-    getWizardEyesColor: getWizardEyesColor
+    COAT_COLORS: COAT_COLORS,
+    EYES_COLORS: EYES_COLORS
   };
 })();
 
@@ -162,15 +163,15 @@ window.wizardData = (function () {
   });
 // Изменение цвета мантии персонажа, по клику
   wizardCoat.addEventListener('click', function () {
-    wizardCoat.style.fill = window.wizardData.getWizardCoatColor();
+    window.colorizeElement(wizardCoat, window.wizardData.COAT_COLORS, window.utils.fillElement);
   });
 // Изменение цвета глаз персонажа, по клику
   wizardEyes.addEventListener('click', function () {
-    wizardEyes.style.fill = window.wizardData.getWizardEyesColor();
+    window.colorizeElement(wizardEyes, window.wizardData.EYES_COLORS, window.utils.fillElement);
   });
 // Изменение цвета огненого шара, по клику
   setupFireballWrap.addEventListener('click', function () {
-    setupFireballWrap.style.background = window.getRandomArrayElement(FIREBALL_COLORS);
+    window.colorizeElement(setupFireballWrap, FIREBALL_COLORS, window.utils.changeElementBackground);
   });
   // Показываем блок setup-similar
   document.querySelector('.setup-similar').classList.remove('hidden');
