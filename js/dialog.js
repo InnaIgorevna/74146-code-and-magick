@@ -16,23 +16,19 @@
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
       };
-
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-
       dialog.style.top = (dialog.offsetTop - shift.y) + 'px';
       dialog.style.left = (dialog.offsetLeft - shift.x) + 'px';
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-
 })('.setup', '.setup-user-pic');

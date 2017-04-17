@@ -812,3 +812,10 @@ input[type=radio]:checked + .review-mark-label {
   font-size: 14px;
   color: #ffffff;
 }
+.response-error-text{
+  color: #7d0e0e;
+  font-weight: 700;
+  border: 2px solid #a02e11;
+  padding: 10px;
+  border-radius: 5px;
+}

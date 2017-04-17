@@ -16,30 +16,7 @@ window.utils = (function () {
     changeElementBackground: changeElementBackground
   };
 })();
-
 window.wizardData = (function () {
-  var NAMES = [
-    'Иван',
-    'Хуан Себастьян',
-    'Мария',
-    'Кристоф',
-    'Виктор',
-    'Юлия',
-    'Люпита',
-    'Вашингтон'
-  ];
-
-  var SURNAMES = [
-    'да Марья',
-    'Верон',
-    'Мирабелла',
-    'Вальц',
-    'Онопко',
-    'Топольницкая',
-    'Нионго',
-    'Ирвинг'
-  ];
-
   var COAT_COLORS = [
     'rgb(101, 137, 164)',
     'rgb(241, 43, 107)',
@@ -56,47 +33,34 @@ window.wizardData = (function () {
     'yellow',
     'green'
   ];
-
+  var getWizardsURL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/code-and-magick/data';
   var WIZARD_COUNT = 4;
-
-  // Возвращает полное имя волшебника
-  function getWizardName() {
-    var name = window.utils.getRandomArrayElement(NAMES);
-    var surname = window.utils.getRandomArrayElement(SURNAMES);
-    if (Math.random() < 0.5) {
-      return name + ' ' + surname;
-    } else {
-      return surname + ' ' + name;
-    }
-  }
-// Возвращаем массив объектов волщебников
-  function createWizards() {
-    var wizards = [];
+  function onLoad(res) {
+    // fragment-oтстойник(Буфер). После того как собрался блок с волшебником. Этот блок отправляется в отстойник.
+    // Добавление идет в конец. И после того как всех волшебников собрали добавляем в блок setup-similar-list
+    var similarListElement = document.querySelector('.setup-similar-list');
+    var fragment = document.createDocumentFragment();
     for (var i = 0; i < WIZARD_COUNT; i++) {
-      wizards.push({
-        name: getWizardName()
-      });
+      fragment.appendChild(renderWizard(res[i]));
     }
-    return wizards;
+    similarListElement.appendChild(fragment);
+  }
+  function onError(res) {
+    var setupSimilarLabel = document.querySelector('.setup-similar-list');
+    setupSimilarLabel.innerHTML = '<div class="response-error-text">' + 'Ошибка! ' + res + '</div>';
   }
 // Возвращает клонируемый из шаблона #similar-wizard-template блок с волшебником c заполнеными данными из массива
   function renderWizard(wizard) {
     var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
     var wizardElement = similarWizardTemplate.cloneNode(true);
     wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    window.colorizeElement(wizardElement.querySelector('.wizard-coat'), COAT_COLORS, window.utils.fillElement);
-    window.colorizeElement(wizardElement.querySelector('.wizard-eyes'), EYES_COLORS, window.utils.fillElement);
+    // window.colorizeElement(wizardElement.querySelector('.wizard-coat'), COAT_COLORS, window.utils.fillElement);
+    // window.colorizeElement(wizardElement.querySelector('.wizard-eyes'), EYES_COLORS, window.utils.fillElement);
+    window.utils.fillElement(wizardElement.querySelector('.wizard-coat'), wizard.colorCoat);
+    window.utils.fillElement(wizardElement.querySelector('.wizard-eyes'), wizard.colorEyes);
     return wizardElement;
   }
-// fragment-oтстойник(Буфер). После того как собрался блок с волшебником. Этот блок отправляется в отстойник.
-// Добавление идет в конец. И после того как всех волшебников собрали добавляем в блок setup-similar-list
-  var similarListElement = document.querySelector('.setup-similar-list');
-  var fragment = document.createDocumentFragment();
-  var wizards = createWizards();
-  for (var i = 0; i < wizards.length; i++) {
-    fragment.appendChild(renderWizard(wizards[i]));
-  }
-  similarListElement.appendChild(fragment);
+  window.load(getWizardsURL, onLoad, onError);
   return {
     COAT_COLORS: COAT_COLORS,
     EYES_COLORS: EYES_COLORS
