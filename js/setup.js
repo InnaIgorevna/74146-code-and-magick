@@ -16,55 +16,97 @@ window.utils = (function () {
     changeElementBackground: changeElementBackground
   };
 })();
-window.wizardData = (function () {
+window.debounce = (function () {
+  var DEBOUNCE_INTERVAL = 500; // ms
+  var lastTimeout;
+  function debounce(fun) {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+  }
+  return debounce;
+})();
+(function () {
   var COAT_COLORS = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
     'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
     'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'
+    'rgb(241, 43, 107)',
+    'rgb(101, 137, 164)',
+    'rgb(0, 0, 0)',
+    'rgb(215, 210, 55)',
+    'rgb(56, 159, 117)',
+    'rgb(241, 43, 107)'
   ];
-
   var EYES_COLORS = [
-    'black',
     'red',
-    'blue',
+    'orange',
     'yellow',
-    'green'
+    'green',
+    'lightblue',
+    'blue',
+    'purple'
   ];
   var getWizardsURL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/code-and-magick/data';
-  var WIZARD_COUNT = 4;
+  var wizards = [];
+  var coatColor;
+  var eyesColor;
+  function updateWizards() {
+    window.renderWizards(wizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  }
   function onLoad(res) {
-    // fragment-oтстойник(Буфер). После того как собрался блок с волшебником. Этот блок отправляется в отстойник.
-    // Добавление идет в конец. И после того как всех волшебников собрали добавляем в блок setup-similar-list
-    var similarListElement = document.querySelector('.setup-similar-list');
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < WIZARD_COUNT; i++) {
-      fragment.appendChild(renderWizard(res[i]));
-    }
-    similarListElement.appendChild(fragment);
+    wizards = res;
+    updateWizards();
   }
   function onError(res) {
     var setupSimilarLabel = document.querySelector('.setup-similar-list');
     setupSimilarLabel.innerHTML = '<div class="response-error-text">' + 'Ошибка! ' + res + '</div>';
   }
-// Возвращает клонируемый из шаблона #similar-wizard-template блок с волшебником c заполнеными данными из массива
-  function renderWizard(wizard) {
-    var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
-    var wizardElement = similarWizardTemplate.cloneNode(true);
-    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    // window.colorizeElement(wizardElement.querySelector('.wizard-coat'), COAT_COLORS, window.utils.fillElement);
-    // window.colorizeElement(wizardElement.querySelector('.wizard-eyes'), EYES_COLORS, window.utils.fillElement);
-    window.utils.fillElement(wizardElement.querySelector('.wizard-coat'), wizard.colorCoat);
-    window.utils.fillElement(wizardElement.querySelector('.wizard-eyes'), wizard.colorEyes);
-    return wizardElement;
+  var wizardCoat = document.querySelector('.wizard-coat');
+  var wizardEyes = document.querySelector('.wizard-eyes');
+// Изменение цвета мантии персонажа, по клику
+
+  wizardCoat.addEventListener('click', function () {
+    window.colorizeElement(wizardCoat, COAT_COLORS, function (elem, randCol) {
+      coatColor = randCol;
+      window.utils.fillElement(elem, randCol);
+      window.debounce(updateWizards);
+    });
+  });
+// Изменение цвета глаз персонажа, по клику
+  wizardEyes.addEventListener('click', function () {
+    window.colorizeElement(wizardEyes, EYES_COLORS, function (elem, randCol) {
+      eyesColor = randCol;
+      window.utils.fillElement(elem, randCol);
+      window.debounce(updateWizards);
+    });
+  });
+  function namesComparator(left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+  function getRank(wizard) {
+    var rank = 0;
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+    return rank;
   }
   window.load(getWizardsURL, onLoad, onError);
-  return {
-    COAT_COLORS: COAT_COLORS,
-    EYES_COLORS: EYES_COLORS
-  };
 })();
 
 (function () {
@@ -90,8 +132,6 @@ window.wizardData = (function () {
   var setup = document.querySelector('.setup');
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = document.querySelector('.setup-close');
-  var wizardCoat = document.querySelector('.wizard-coat');
-  var wizardEyes = document.querySelector('.wizard-eyes');
   var setupOpenIcon = document.querySelector('.setup-open-icon');
   var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
 
@@ -125,14 +165,7 @@ window.wizardData = (function () {
       openSetup();
     }
   });
-// Изменение цвета мантии персонажа, по клику
-  wizardCoat.addEventListener('click', function () {
-    window.colorizeElement(wizardCoat, window.wizardData.COAT_COLORS, window.utils.fillElement);
-  });
-// Изменение цвета глаз персонажа, по клику
-  wizardEyes.addEventListener('click', function () {
-    window.colorizeElement(wizardEyes, window.wizardData.EYES_COLORS, window.utils.fillElement);
-  });
+
 // Изменение цвета огненого шара, по клику
   setupFireballWrap.addEventListener('click', function () {
     window.colorizeElement(setupFireballWrap, FIREBALL_COLORS, window.utils.changeElementBackground);
